@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h2>前端单元测试的价值</h2>
+					<ul>
+						<li>保证前端代码的健壮性与易维护性，前端的JS问题及早发现；</li>
+						<li>提高代码质量，规范代码，增加代码健壮性，提高产品质量；</li>
+						<li>回归的价值场景：单个应用涉及其他应用变更，能迅速反馈错误；</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>如何进行单元测试</h2>
+					<p>在JavaScript中，我们一般需要三个工具</p>
+					<ul>
+						<li>测试管理工具runner（如Karma, Selenium...）</li>
+						<li>测试框架（如mocha, jasmine...）</li>
+						<li>断言库（如chai, should, expect...）</li>
+					</ul>
+
+					<p>除此之外，一般还需要用到测试浏览器，常用的有PhantomJs</p>
+				</section>
+
+				<section>
+					<h2>测试管理工具</h2>
+					<p>测试管理工具是用来组织和运行整个测试的工具，它能够将测试框架、断言库、测试浏览器、测试代码和被测试代码组织起来，并运行被测试代码进行测试。这里我们选择使用karma</p>
+				</section>
+				
+				<section>
+					<h2>测试框架</h2>
+					<p>测试框架是单元测试的核心，它提供了单元测试所需的各种API，你可以使用它们来对你的代码进行单元测试。这里我们选择使用mocha</p>
+				</section>
+
+				<section>
+					<h2>断言库</h2>
+					<p>断言库提供了用于描述你的具体测试的API，有了它们你的测试代码便能简单直接，也更为语义化，理想状态下你甚至可以让非开发人员来撰写单元测试。这里我们选择使用chai</p>
+				</section>
+
+				<section>
+					<h2>针对vuejs项目的处理</h2>
+					<p>我们日常所写的vuejs一般都是使用ES6语法的vue单文件，需要通过webpack + bable + vue-loader转码才能得到可以在浏览器中执行的js。写单元测试时也要面对这个问题，需要使用karma-webpack等工具来进行处理。所需依赖如下</p>
+					<pre><code class="json" data-trim>
+						"devDependencies": {
+							"chai": "*",
+							"karma": "*",
+							"karma-chai": "*",
+							"karma-mocha": "*",
+							"karma-phantomjs-launcher": "*",
+							"mocha": "*",
+							"karma-webpack": "*",
+							"karma-spec-reporter": "*",
+							...
+						}
+					</code></pre>
+				</section>
+// TODO
+				<section>
+					<h2>配置karma.conf.js</h2>
+					<p>可以使<code>karma init</code>快速生成karma.conf.js测试框架选择mocha，是否使用require.js选择no，选择测试使用的浏览器选择phantom.js。生成的karma.conf.js只是最基本的karma配置，我们还需要手动修改一些地方。最终如下：</p>
+					<pre><code class="javascript" data-trim>
+							module.exports = function (config) {
+								config.set({
+								  browsers: ['PhantomJS'],
+								  frameworks: ['mocha', 'sinon-chai', 'phantomjs-shim'],
+								  reporters: ['spec'],
+								  files: ['./index.js'],
+								  preprocessors: {
+									'./index.js': ['webpack', 'sourcemap']
+								  },
+								  webpack: webpackConfig,
+								})
+							  }
+							  
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>被测组件</h2>
+				</section>
+
+				<section>
+					<h2>测试代码</h2>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
